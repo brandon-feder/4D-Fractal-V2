@@ -15,25 +15,23 @@ class Mesh:
     def __calcPixel(x, y, pos, t):
         # TODO: Rotate
         vec = np.quaternion( x, y, 0, 0 )
-        print(vec)
-        return np.array([ x, y, 0 ])
-        # mag = abs(vec)/VECTOR_MAGNITUDE_CHANGE
-        # vec /= 1 if mag == 0 else mag
+        mag = abs(vec)/VECTOR_MAGNITUDE_CHANGE
+        vec /= 1 if mag == 0 else mag
 
-        # res = Mesh.__calcFractalIntersect( 
-        #     pos.copy(), 
-        #     vec, 
-        #     MAX_FRACTAL_SEARCH_DIST//VECTOR_MAGNITUDE_CHANGE, 
-        #     t 
-        # )
+        res = Mesh.__calcFractalIntersect( 
+            pos.copy(), 
+            vec, 
+            MAX_FRACTAL_SEARCH_DIST//VECTOR_MAGNITUDE_CHANGE, 
+            t 
+        )
 
 
-        # if round(Fractal.dist( res, pos )*10000) == round(MAX_FRACTAL_SEARCH_DIST*10000): # May cause error due to epsilon
-        #     return np.array( [0, 0, 0] ) 
-        # else:
-        #     dist = Fractal.dist( pos, res )
+        if round(Fractal.dist( res, pos )*10000) == round(MAX_FRACTAL_SEARCH_DIST*10000): # May cause error due to epsilon
+            return np.array( [0, 0, 0] ) 
+        else:
+            dist = Fractal.dist( pos, res )
 
-        #     return np.array([ 255*dist//MAX_FRACTAL_SEARCH_DIST, 0, 255])
+            return np.array([ 255*dist//MAX_FRACTAL_SEARCH_DIST, 0, 255])
         
 
     @staticmethod
