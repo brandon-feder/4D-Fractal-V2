@@ -1,4 +1,4 @@
-from math import *
+from math import sin, cos
 import numpy as np
 import quaternion
 from random import randint
@@ -75,37 +75,28 @@ class Quadrilateral:
         return Quadrilateral.__multiplyMatricies(point1, point2, point3, point4, xyAxisRotation)
 
     @staticmethod
+    def __rotationToUse(whichRotation, angleList, W, X, Y, Z):
+        if whichRotation==0:
+            W, X, Y, Z= Quadrilateral.__zwRotation(angleList[0], W, X, Y, Z)
+        if whichRotation==1:
+            W, X, Y, Z= Quadrilateral.__ywRotation(angleList[1], W, X, Y, Z)
+        if whichRotation==2:
+            W, X, Y, Z= Quadrilateral.__yzRotation(angleList[2], W, X, Y, Z)
+        if whichRotation==3:
+            W, X, Y, Z= Quadrilateral.__xwRotation(angleList[3], W, X, Y, Z)
+        if whichRotation==4:
+            W, X, Y, Z= Quadrilateral.__xzRotation(angleList[4], W, X, Y, Z)
+        if whichRotation==5:
+            W, X, Y, Z= Quadrilateral.__xyRotation(angleList[5], W, X, Y, Z)
+
+    @staticmethod
     def randomRotation(quaternion, angleList, random, order): #random is T/F; order is list from 0 to 5 detailing the order of rotations
         W, X, Y, Z= quaternion.w, quaternion.x, quaternion.y, quaternion.z
 
         if random:
-            randomNumber=random.randint(0, 5)
-
-            if randomNumber==0:
-                W, X, Y, Z= Quadrilateral.__zwRotation(angleList[0], W, X, Y, Z)
-            if randomNumber==1:
-                W, X, Y, Z= Quadrilateral.__ywRotation(angleList[1], W, X, Y, Z)
-            if randomNumber==2:
-                W, X, Y, Z= Quadrilateral.__yzRotation(angleList[2], W, X, Y, Z)
-            if randomNumber==3:
-                W, X, Y, Z= Quadrilateral.__xwRotation(angleList[3], W, X, Y, Z)
-            if randomNumber==4:
-                W, X, Y, Z= Quadrilateral.__xzRotation(angleList[4], W, X, Y, Z)
-            if randomNumber==5:
-                W, X, Y, Z= Quadrilateral.__xyRotation(angleList[5], W, X, Y, Z)
+            Quadrilateral.__rotationToUse(random.randint(0, 5), angleList, W, X, Y, Z)
         else:
             for whichRotation in order:
-                if whichRotation==0:
-                    W, X, Y, Z= Quadrilateral.__zwRotation(angleList[0], W, X, Y, Z)
-                if whichRotation==1:
-                    W, X, Y, Z= Quadrilateral.__ywRotation(angleList[1], W, X, Y, Z)
-                if whichRotation==2:
-                    W, X, Y, Z= Quadrilateral.__yzRotation(angleList[2], W, X, Y, Z)
-                if whichRotation==3:
-                    W, X, Y, Z= Quadrilateral.__xwRotation(angleList[3], W, X, Y, Z)
-                if whichRotation==4:
-                    W, X, Y, Z= Quadrilateral.__xzRotation(angleList[4], W, X, Y, Z)
-                if whichRotation==5:
-                    W, X, Y, Z= Quadrilateral.__xyRotation(angleList[5], W, X, Y, Z)
+                Quadrilateral.__rotationToUse(whichRotation, angleList, W, X, Y, Z)
 
         return np.quaternion(W, X, Y, Z)
