@@ -16,8 +16,6 @@ if __name__ == "__main__":
     
     # Generates the mesh
     image = Mesh.calcFrame( 0 )
-    plt.imshow( image )
-    plt.show()
     
     # X, Y, Z = [], [], []
     # fig = plt.figure()
