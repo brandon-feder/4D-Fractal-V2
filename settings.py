@@ -1,6 +1,8 @@
 import quaternion
 import numpy as np
 
+from helpers import *
+
 from math import *
 
 '''
@@ -11,12 +13,12 @@ MAX_DEPTH = 25
 '''
 The radious that define when a Z has escaped to far enough not to be in the set
 '''
-ESCAPE_RADIOUS = 4
+ESCAPE_RADIOUS = 10
 
 '''
 The distance that the "camera" is from the screen
 '''
-CAMERA_DIST = 10
+CAMERA_DIST = 3
 
 '''
 The maximum distance away from the fractal to search for
@@ -30,15 +32,14 @@ WIDTH = 250
 HEIGHT = 250
 
 '''
-Change in angle in both directions
-'''
-D_ANGLE = 0.0005
-
-
-'''
 The rate of change of the vector
 '''
-VECTOR_MAGNITUDE_CHANGE = 1
+VECTOR_MAGNITUDE_CHANGE = 0.5
+
+'''
+Weight of going foward. Related FOV
+'''
+FORWARD_AMOUNT = WIDTH
 
 '''
 Returns the inital variables needed in calculating the fractal
@@ -68,7 +69,9 @@ Returns:
     - All the variables needed for the rest of the calculations
 '''
 def FN( Z, variables, t ):
-    return Z*Z + variables[0], variables
+    return Z**(1 + t/20) + variables[0], variables
+
+    # return Z*Z + variables[0], variables
 
 '''
 Calculates the angles to rotate by
@@ -92,6 +95,24 @@ Returns:
     - A quaternion to translate with
 '''
 def FT( t ):
-    return np.quaternion( -CAMERA_DIST, 0, 0, 0 )
+    return np.quaternion( 0, 0, -CAMERA_DIST, 0 )
 
+'''
+Number of threads to launch
+'''
+N_THREADS = 8
 
+'''
+Whether to parrallelize or not
+'''
+PARRALLEL = True
+
+'''
+The light source position vector
+'''
+LIGHT_SOURCE = np.quaternion( 0, -10, -10, 0 ) # Only edit this line
+LIGHT_SOURCE /= abs(LIGHT_SOURCE)
+
+DIFFUSE_CONSTANT = 1
+
+VIDEO_NAME, VIDEO_TIME, FPS = "video", 10, 15

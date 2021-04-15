@@ -1,9 +1,14 @@
 from fractal import *
+from helpers import *
+
+import quaternion
+import numpy as np
 
 class Mesh:
     @staticmethod
     def __calcFractalIntersect(pos, vel, n, t):
-        for i in range(n):
+        # TODO: Improve algorythm
+        for _ in range(floor(n+1)):
             if Fractal.calcFractal( pos, t )[0] == True:
                 return pos
             
@@ -14,7 +19,8 @@ class Mesh:
     @staticmethod
     def __calcPixel(x, y, pos, t):
         # TODO: Rotate
-        vec = np.quaternion( x, y, 0, 0 )
+        vec = np.quaternion( x, y, FORWARD_AMOUNT, 0 )
+
         mag = abs(vec)/VECTOR_MAGNITUDE_CHANGE
         vec /= 1 if mag == 0 else mag
 
@@ -22,31 +28,23 @@ class Mesh:
             pos.copy(), 
             vec, 
             MAX_FRACTAL_SEARCH_DIST//VECTOR_MAGNITUDE_CHANGE, 
-            t 
+            t
         )
 
-
-        if round(Fractal.dist( res, pos )*10000) == round(MAX_FRACTAL_SEARCH_DIST*10000): # May cause error due to epsilon
-            return np.array( [0, 0, 0] ) 
-        else:
-            dist = Fractal.dist( pos, res )
-
-            return np.array([ 255*dist//MAX_FRACTAL_SEARCH_DIST, 0, 255])
-        
+        return res
 
     @staticmethod
     def calcFrame( t ):
-        image = np.ndarray(
-            ( WIDTH, HEIGHT, 3 )
-        )
+        firstIntersect = np.ndarray(( WIDTH, HEIGHT ), dtype=np.quaternion)
 
         pos = FT(t)
 
         for x in range(0, WIDTH):
-            print(x/WIDTH)
+            print(t/(VIDEO_TIME*FPS ), x/WIDTH)
             for y in range(0, HEIGHT):
-                image[x][y][0:3] = Mesh.__calcPixel( x - WIDTH//2, y - HEIGHT // 2, pos, t)[0:3]
-        
-        return image
+                firstIntersect[x][y] = Mesh.__calcPixel( x - WIDTH//2, y - HEIGHT // 2, pos, t)
+    
+
+        return firstIntersect
 
         
